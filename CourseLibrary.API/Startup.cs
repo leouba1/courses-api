@@ -37,7 +37,7 @@ namespace CourseLibrary.API
                     new CamelCasePropertyNamesContractResolver();
              })
              .AddXmlDataContractSerializerFormatters()
-			 .ConfigureApiBehaviorOptions(setupAction =>
+             .ConfigureApiBehaviorOptions(setupAction =>
             {
                 setupAction.InvalidModelStateResponseFactory = context =>
                 {
@@ -81,6 +81,9 @@ namespace CourseLibrary.API
                     };
                 };
             });
+
+            // register PropertyMappingService
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
