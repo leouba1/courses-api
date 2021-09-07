@@ -159,14 +159,12 @@ namespace CourseLibrary.API.Controllers
 
             return Ok(friendlyResourceToReturn);
         }
-
-        [HttpPost(Name = "CreateAuthor")]
+		
+		[HttpPost(Name = "CreateAuthorWithDateOfDeath")]
         [RequestHeaderMatchesMediaType("Content-Type",
-            "application/json",
-            "application/vnd.marvin.authorforcreation+json")]
-        [Consumes("application/json",
-            "application/vnd.marvin.authorforcreation+json")]
-        public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto author)
+            "application/vnd.marvin.authorforcreationwithdateofdeath+json")]
+        [Consumes("application/vnd.marvin.authorforcreationwithdateofdeath+json")]
+        public IActionResult CreateAuthorWithDateOfDeath(AuthorForCreationWithDateOfDeathDto author)
         {
             var authorEntity = _mapper.Map<Entities.Author>(author);
             _courseLibraryRepository.AddAuthor(authorEntity);
@@ -175,7 +173,7 @@ namespace CourseLibrary.API.Controllers
             var authorToReturn = _mapper.Map<AuthorDto>(authorEntity);
 
             var links = CreateLinksForAuthor(authorToReturn.Id, null);
-             
+
             var linkedResourceToReturn = authorToReturn.ShapeData(null)
                 as IDictionary<string, object>;
             linkedResourceToReturn.Add("links", links);
@@ -185,11 +183,13 @@ namespace CourseLibrary.API.Controllers
                 linkedResourceToReturn);
         }
 
-        [HttpPost(Name = "CreateAuthorWithDateOfDeath")]
+        [HttpPost(Name = "CreateAuthor")]
         [RequestHeaderMatchesMediaType("Content-Type",
-            "application/vnd.marvin.authorforcreationwithdateofdeath+json")]
-        [Consumes("application/vnd.marvin.authorforcreationwithdateofdeath+json")]
-        public IActionResult CreateAuthorWithDateOfDeath(AuthorForCreationWithDateOfDeathDto author)
+            "application/json",
+            "application/vnd.marvin.authorforcreation+json")]
+        [Consumes("application/json",
+            "application/vnd.marvin.authorforcreation+json")]
+        public ActionResult<AuthorDto> CreateAuthor(AuthorForCreationDto author)
         {
             var authorEntity = _mapper.Map<Entities.Author>(author);
             _courseLibraryRepository.AddAuthor(authorEntity);
