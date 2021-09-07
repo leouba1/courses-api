@@ -36,29 +36,29 @@ namespace CourseLibrary.API
                  setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
              })
-            .AddXmlDataContractSerializerFormatters()
-            .ConfigureApiBehaviorOptions(setupAction =>
+             .AddXmlDataContractSerializerFormatters()
+			 .ConfigureApiBehaviorOptions(setupAction =>
             {
                 setupAction.InvalidModelStateResponseFactory = context =>
                 {
-                    // create a problem details object
-                    var problemDetailsFactory = context.HttpContext.RequestServices
+                // create a problem details object
+                var problemDetailsFactory = context.HttpContext.RequestServices
                         .GetRequiredService<ProblemDetailsFactory>();
                     var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(
-                            context.HttpContext, 
-                            context.ModelState); 
+                            context.HttpContext,
+                            context.ModelState);
 
-                    // add additional info not added by default
-                    problemDetails.Detail = "See the errors field for details.";
+                // add additional info not added by default
+                problemDetails.Detail = "See the errors field for details.";
                     problemDetails.Instance = context.HttpContext.Request.Path;
 
-                    // find out which status code to use
-                    var actionExecutingContext =
+                // find out which status code to use
+                var actionExecutingContext =
                           context as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
 
-                    // if there are modelstate errors & all keys were correctly
-                    // found/parsed we're dealing with validation errors
-                    if ((context.ModelState.ErrorCount > 0) &&
+                // if there are modelstate errors & all arguments were correctly
+                // found/parsed we're dealing with validation errors
+                if ((context.ModelState.ErrorCount > 0) &&
                         (actionExecutingContext?.ActionArguments.Count == context.ActionDescriptor.Parameters.Count))
                     {
                         problemDetails.Type = "https://courselibrary.com/modelvalidationproblem";
@@ -71,9 +71,9 @@ namespace CourseLibrary.API
                         };
                     }
 
-                    // if one of the keys wasn't correctly found / couldn't be parsed
-                    // we're dealing with null/unparsable input
-                    problemDetails.Status = StatusCodes.Status400BadRequest;
+                // if one of the arguments wasn't correctly found / couldn't be parsed
+                // we're dealing with null/unparseable input
+                problemDetails.Status = StatusCodes.Status400BadRequest;
                     problemDetails.Title = "One or more errors on input occurred.";
                     return new BadRequestObjectResult(problemDetails)
                     {
