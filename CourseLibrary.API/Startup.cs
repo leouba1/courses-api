@@ -36,7 +36,7 @@ namespace CourseLibrary.API
                  setupAction.SerializerSettings.ContractResolver =
                     new CamelCasePropertyNamesContractResolver();
              })
-             .AddXmlDataContractSerializerFormatters()
+            .AddXmlDataContractSerializerFormatters()
             .ConfigureApiBehaviorOptions(setupAction =>
             {
                 setupAction.InvalidModelStateResponseFactory = context =>
